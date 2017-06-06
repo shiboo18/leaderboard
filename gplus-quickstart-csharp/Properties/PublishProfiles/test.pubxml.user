@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>\\ecniisdev.ecn.purdue.edu\FitLeaderboard</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="activeFitnessDataCollectionForm.html">
+      <publishTime>04/06/2017 16:10:22</publishTime>
+    </File>
+    <File Include="activeUserInputForm.html">
+      <publishTime>04/05/2017 13:23:38</publishTime>
+    </File>
+    <File Include="addUserForm.html">
+      <publishTime>04/07/2017 12:25:33</publishTime>
+    </File>
+    <File Include="addUserHandler.ashx">
+      <publishTime>04/06/2017 20:18:36</publishTime>
+    </File>
+    <File Include="adminUserInputForm.html">
+      <publishTime>04/06/2017 20:23:03</publishTime>
+    </File>
+    <File Include="App_Data/Database1.mdf">
+      <publishTime>03/01/2017 17:17:25</publishTime>
+    </File>
+    <File Include="App_Data/Database1_log.ldf">
+      <publishTime>03/01/2017 17:17:25</publishTime>
+    </File>
+    <File Include="bin/Google.Apis.Auth.dll">
+      <publishTime>01/25/2017 14:05:20</publishTime>
+    </File>
+    <File Include="bin/Google.Apis.Auth.PlatformServices.dll">
+      <publishTime>01/25/2017 14:05:20</publishTime>
+    </File>
+    <File Include="bin/Google.Apis.Core.dll">
+      <publishTime>01/25/2017 14:05:20</publishTime>
+    </File>
+    <File Include="bin/Google.Apis.dll">
+      <publishTime>01/25/2017 14:05:20</publishTime>
+    </File>
+    <File Include="bin/Google.Apis.Fitness.v1.dll">
+      <publishTime>01/25/2017 14:05:20</publishTime>
+    </File>
+    <File Include="bin/Google.Apis.Oauth2.v2.dll">
+      <publishTime>01/25/2017 14:06:52</publishTime>
+    </File>
+    <File Include="bin/Google.Apis.PlatformServices.dll">
+      <publishTime>01/25/2017 14:05:20</publishTime>
+    </File>
+    <File Include="bin/Google.Apis.Plus.v1.dll">
+      <publishTime>01/25/2017 14:06:06</publishTime>
+    </File>
+    <File Include="bin/GPlusQuickstartCsharp.dll">
+      <publishTime>04/07/2017 12:27:05</publishTime>
+    </File>
+    <File Include="bin/log4net.dll">
+      <publishTime>01/25/2017 14:05:19</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.dll">
+      <publishTime>04/03/2017 20:04:38</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>01/25/2017 14:05:19</publishTime>
+    </File>
+    <File Include="bin/Owin.dll">
+      <publishTime>04/03/2017 20:04:37</publishTime>
+    </File>
+    <File Include="bin/Zlib.Portable.dll">
+      <publishTime>01/25/2017 14:05:20</publishTime>
+    </File>
+    <File Include="css/colour.css">
+      <publishTime>03/01/2017 22:35:21</publishTime>
+    </File>
+    <File Include="css/portfolio_one.css">
+      <publishTime>03/01/2017 22:35:21</publishTime>
+    </File>
+    <File Include="css/portfolio_two.css">
+      <publishTime>03/01/2017 22:35:21</publishTime>
+    </File>
+    <File Include="css/style.css">
+      <publishTime>04/05/2017 13:24:54</publishTime>
+    </File>
+    <File Include="dataCollection.html">
+      <publishTime>03/29/2017 19:58:07</publishTime>
+    </File>
+    <File Include="fitnessDataCollectionHandler.ashx">
+      <publishTime>04/05/2017 13:28:35</publishTime>
+    </File>
+    <File Include="fitnessDataRangeHandler.ashx">
+      <publishTime>03/21/2017 02:08:16</publishTime>
+    </File>
+    <File Include="fonts/Jenna Sue Design Font License.txt">
+      <publishTime>03/01/2017 22:35:32</publishTime>
+    </File>
+    <File Include="fonts/JennaSue-webfont.eot">
+      <publishTime>03/01/2017 22:35:32</publishTime>
+    </File>
+    <File Include="fonts/JennaSue-webfont.ttf">
+      <publishTime>03/01/2017 22:35:32</publishTime>
+    </File>
+    <File Include="fonts/News Cycle SIL OFL Font License 1.1.txt">
+      <publishTime>03/01/2017 22:35:32</publishTime>
+    </File>
+    <File Include="fonts/NewsCycle-Regular.eot">
+      <publishTime>03/01/2017 22:35:32</publishTime>
+    </File>
+    <File Include="fonts/NewsCycle-Regular.ttf">
+      <publishTime>03/01/2017 22:35:32</publishTime>
+    </File>
+    <File Include="gfitLeaderboard.html">
+      <publishTime>04/05/2017 14:28:13</publishTime>
+    </File>
+    <File Include="gfitLeaderboardHandler.ashx">
+      <publishTime>04/05/2017 13:11:41</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>01/25/2017 13:35:50</publishTime>
+    </File>
+    <File Include="images/about.jpg">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/arrows-black.png">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/btn_google_signin_dark_focus_web%402x.png">
+      <publishTime>03/01/2017 23:26:46</publishTime>
+    </File>
+    <File Include="images/btn_google_signin_dark_normal_web%402x.png">
+      <publishTime>03/01/2017 23:26:46</publishTime>
+    </File>
+    <File Include="images/btn_google_signin_dark_pressed_web%402x.png">
+      <publishTime>03/01/2017 23:26:46</publishTime>
+    </File>
+    <File Include="images/btn_google_signin_light_focus_web%402x.png">
+      <publishTime>03/01/2017 21:07:47</publishTime>
+    </File>
+    <File Include="images/btn_google_signin_light_normal_web%402x.png">
+      <publishTime>03/01/2017 21:07:47</publishTime>
+    </File>
+    <File Include="images/btn_google_signin_light_pressed_web%402x.png">
+      <publishTime>03/01/2017 21:07:47</publishTime>
+    </File>
+    <File Include="images/calendar.png">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/contact.jpg">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/facebook.png">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/fitness.jpg">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/google_signin_button.png">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/home_1.jpg">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/home_2.jpg">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/home_3.jpg">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/image_transparent.png">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/light.png">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/light_blog.png">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/light_bullet.png">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/loader.gif">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/next_arrow.gif">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/prev_arrow.gif">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/rss.png">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="images/twitter.png">
+      <publishTime>03/01/2017 22:35:46</publishTime>
+    </File>
+    <File Include="inActiveFitnessDataCollectionForm.html">
+      <publishTime>04/06/2017 16:10:18</publishTime>
+    </File>
+    <File Include="inActiveUserInputForm.html">
+      <publishTime>04/20/2017 07:18:22</publishTime>
+    </File>
+    <File Include="index.html">
+      <publishTime>04/05/2017 11:06:09</publishTime>
+    </File>
+    <File Include="js/google_plusone.js">
+      <publishTime>03/30/2017 19:56:30</publishTime>
+    </File>
+    <File Include="js/image_fade.js">
+      <publishTime>03/01/2017 22:35:57</publishTime>
+    </File>
+    <File Include="js/jquery.canvasjs.min.js">
+      <publishTime>03/21/2017 10:22:16</publishTime>
+    </File>
+    <File Include="js/jquery.easing-sooper.js">
+      <publishTime>03/01/2017 22:35:57</publishTime>
+    </File>
+    <File Include="js/jquery.galleriffic.js">
+      <publishTime>03/01/2017 22:35:57</publishTime>
+    </File>
+    <File Include="js/jquery.min.js">
+      <publishTime>03/01/2017 22:35:57</publishTime>
+    </File>
+    <File Include="js/jquery.opacityrollover.js">
+      <publishTime>03/01/2017 22:35:57</publishTime>
+    </File>
+    <File Include="js/jquery.sooperfish.js">
+      <publishTime>03/01/2017 22:35:57</publishTime>
+    </File>
+    <File Include="js/modernizr-1.5.min.js">
+      <publishTime>03/01/2017 22:35:57</publishTime>
+    </File>
+    <File Include="leaderboard.html">
+      <publishTime>03/29/2017 19:57:53</publishTime>
+    </File>
+    <File Include="leaderboard_web.ashx">
+      <publishTime>03/07/2017 06:25:59</publishTime>
+    </File>
+    <File Include="manualLeaderboard.html">
+      <publishTime>04/05/2017 14:56:51</publishTime>
+    </File>
+    <File Include="manualLeaderboardHandler.ashx">
+      <publishTime>04/05/2017 13:11:54</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>04/03/2017 20:04:38</publishTime>
+    </File>
+    <File Include="signin.ashx">
+      <publishTime>01/25/2017 13:35:50</publishTime>
+    </File>
+    <File Include="updateGoal.html">
+      <publishTime>04/06/2017 16:07:51</publishTime>
+    </File>
+    <File Include="updateGoalHandler.ashx">
+      <publishTime>04/05/2017 13:12:06</publishTime>
+    </File>
+    <File Include="updateProfile.html">
+      <publishTime>03/29/2017 19:58:19</publishTime>
+    </File>
+    <File Include="updateProfileHandler1.ashx">
+      <publishTime>03/21/2017 00:42:26</publishTime>
+    </File>
+    <File Include="userInputFormHandler.ashx">
+      <publishTime>04/05/2017 10:30:21</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>04/07/2017 12:55:33</publishTime>
+    </File>
+    <File Include="Web.sitemap">
+      <publishTime>03/20/2017 23:37:19</publishTime>
+    </File>
+    <File Include="WebForm1.aspx">
+      <publishTime>03/20/2017 21:34:30</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

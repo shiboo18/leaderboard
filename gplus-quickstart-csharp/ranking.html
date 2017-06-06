@@ -1,0 +1,181 @@
+﻿<html>
+<head>
+    <title>Fitness Leaderboard</title>
+    <meta name="description" content="Leaderboard for fitness" />
+    <meta name="keywords" content="website keywords, website keywords" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <!-- stylesheets -->
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link href="css/colour.css" rel="stylesheet" type="text/css" />
+    <!-- modernizr enables HTML5 elements and feature detects -->
+    <script type="text/javascript" src="js/modernizr-1.5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
+</head>
+<body>
+    <div id="main">
+        <!-- begin header -->
+        <header>
+            <div id="logo"><h1>FITNESS<a href="#">LEADER</a>BOARD</h1></div>
+            <ul class="sf-menu" id="nav">
+                <li><a href="userInputFormHandler.ashx">Home</a></li>
+                <li><a href="gfitLeaderboardHandler.ashx">Google Leaderboard </a></li>
+                <li><a href="manualLeaderboardHandler.ashx">Manual Leaderboard </a></li>
+                <li><a href="rankingHandler.ashx">Ranking </a></li>
+                <li><a href="updateGoalHandler.ashx">Goal</a></li>
+                <li><a href="#" onclick="disconnect()">Logout</a></li>
+            </ul>
+        </header>
+        <!-- end header -->
+        <!-- begin content -->
+        <div id="site_content">
+            <div id="left_content">
+                <h1>Check my ranking </h1>
+                <p> Please select the type of ranking. Once you have filled the fields, click Submit. </p>
+                <p id="submitstatus" style="color:red"></p>
+                <form name="dataForm" id="dataForm">
+                    <fieldset style="padding:5px">
+                        <label> Select the day:</label>
+                        <select name="typeOfRanking">
+                            <option value="Cumulative">Cumulative Ranking</option>
+                            <option value="Week">Last 7 days</option>
+                            <option value="Day1">Day 1 </option>
+                            <option value="Day2">Day 2 </option>
+                            <option value="Day3">Day 3 </option>
+                            <option value="Day4">Day 4 </option>
+                            <option value="Day5">Day 5 </option>
+                            <option value="Day6">Day 6 </option>
+                            <option value="Day7">Day 7 </option>
+                            <option value="Day8">Day 8 </option>
+                            <option value="Day9">Day 9 </option>
+                            <option value="Day10">Day 10 </option>
+                            <option value="Day11">Day 11 </option>
+                            <option value="Day12">Day 12 </option>
+                            <option value="Day13">Day 13 </option>
+                            <option value="Day14">Day 14 </option>
+                        </select>
+                        <br /><br />
+                        <label> Select the data source:</label>
+                        <select name="dataSource">
+                            <option value="Manual">Manual Data</option>
+                            <option value="Google">Google Fit</option>                                                        
+                        </select>
+                        <br /><br />                        
+                        <input type="button" value="Submit" id="submitGoalBtn">
+                    </fieldset>
+                </form>
+                <br /><br />
+                <p>
+                    The table below shows the ranking based on the menu selected.                    
+                </p>
+                <div id="ranking"></div>
+            </div>
+            <div id="right_content">
+                <img style="float: left;" src="images/about.jpg" title="about me" alt="about me" />
+            </div>
+        </div>
+
+        <!-- begin footer -->
+        <footer>
+            <p>Copyright &copy; 2012 PhotoArtWork2. All Rights Reserved. <a href="http://www.css3templates.co.uk">Design from css3templates.co.uk</a>.</p>
+        </footer>
+    </div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("body").on('click keypress', function () {
+            ResetThisSession();
+        });
+    });
+    var timeInSecondsAfterSessionOut = 300;
+    var secondTick = 0;
+    var rankingJSON = {};
+    function ResetThisSession() {
+        secondTick = 0;
+    }
+    function StartThisSessionTimer() {
+        secondTick++;
+        var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
+        timeLeft = timeInSecondsAfterSessionOut - secondTick; // override, we have 30 secs only
+
+        $("#spanTimeLeft").html(timeLeft);
+
+        if (secondTick > timeInSecondsAfterSessionOut) {
+            clearTimeout(tick);
+            disconnect();
+            return;
+        }
+        tick = setTimeout("StartThisSessionTimer()", 1000);
+    }
+
+    StartThisSessionTimer();
+    $(document).ready(function () {
+        $("#submitstatus").hide();
+        createRankingGrid();
+        $("#submitGoalBtn").click(function () {
+            var formData = $("#dataForm").serialize();
+            $.ajax({
+                type: "POST",
+                url: window.location.origin + '/getRanking?' + formData,
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function (response) {
+                    console.log("success");
+                    $("#submitstatus").text("Form submitted successfully");
+                    $("#submitstatus").show();
+                    rankingJSON = jQuery.parseJSON(response);
+                    $("#ranking").jsGrid("loadData");
+                    document.getElementById("dataForm").reset();
+                },               
+                error: function (e) {
+                    console.log(e); //use this to see an error in ajax request
+                    $("#submitstatus").text("Form not submitted");
+                    $("#submitstatus").show();
+                    document.getElementById("dataForm").reset();
+                }
+            });
+        });
+    });
+    function disconnect() {
+        $.ajax({
+            type: 'POST',
+            url: window.location.origin + '/disconnect',
+            async: false,
+            success: function (result) {
+                console.log('revoke response: ' + result);
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        }).done(function () {
+            window.location = window.location.origin + '/signin.ashx';
+        });
+    }
+    function createRankingGrid() {
+        $("#ranking").jsGrid({
+            width: "100%",
+            height: "200px",
+            paging: true,
+            controller: {
+                loadData: function () {
+                    console.log('abc');
+                   // var data = $.Deferred();
+                    data = rankingJSON;
+                    return data;
+
+                }
+            },
+            fields: [
+                { name: "fitness_date", type: "text", title: "DATE", width: 80, align: "center" },
+                { name: "max_steps", type: "number", title: "STEP COUNT", width: 50, align: "center" },
+                { name: "last_updated_date", type: "text", title: "UPDATED ON", width: 80, align: "center" },
+            ]
+        });
+        $("#ranking").jsGrid("loadData");
+    }
+
+</script>
+</html>

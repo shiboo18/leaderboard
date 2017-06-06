@@ -1,0 +1,202 @@
+﻿<html>
+<head>
+    <title>Fitness Leaderboard</title>
+    <meta name="description" content="Leaderboard for fitness" />
+    <meta name="keywords" content="website keywords, website keywords" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <!-- stylesheets -->
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link href="css/colour.css" rel="stylesheet" type="text/css" />
+    <!-- modernizr enables HTML5 elements and feature detects -->
+    <script type="text/javascript" src="js/modernizr-1.5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+    <script type="text/javascript" src="js/jquery.canvasjs.min.js"></script>
+</head>
+<body>
+    <div id="main">
+        <!-- begin header -->
+        <header>
+            <div id="logo"><h1>FITNESS<a href="#">LEADER</a>BOARD</h1></div>
+            <nav>
+                <ul class="sf-menu" id="nav">
+                    <li><a href="userInputFormHandler.ashx">Home</a></li>
+                    <li><a href="gfitLeaderboardHandler.ashx">Google Leaderboard </a></li>
+                    <li><a href="manualLeaderboardHandler.ashx">Manual Leaderboard </a></li>
+                    <li><a href="fitnessDataCollectionHandler.ashx">Get Fitness Data </a></li>
+                    <li><a href="updateGoalHandler.ashx">Goal</a></li>
+                    <li><a href="#" onclick="disconnect()">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+        <!-- end header -->
+        <!-- begin content -->
+        <div>
+            <div id="blog_text">
+                <h1 class="select"> Manual Leaderboard - Based on manual user data</h1>
+                <h5 class="select" id="getUserGoal"></h5>
+            </div>
+            <div id="site_content">
+                <div id="left_content">
+                    <h1>Final leaderboard Stats - Yesterday</h1>
+                    <div id="finalstats"></div>
+                </div>
+                <div id="right_content">
+                    <h1>Current Leaderboard Stats</h1>
+                    <div id="currstats"></div>
+                </div>
+            </div>
+            <div id="chartContainer" style="margin-top:20px;height: 400px; width: 80%">
+            </div>
+        </div>
+
+
+        <!-- begin footer -->
+        <footer>
+            <p>Copyright &copy; 2012 PhotoArtWork2. All Rights Reserved. <a href="http://www.css3templates.co.uk">Design from css3templates.co.uk</a>.</p>
+        </footer>
+    </div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("body").on('click keypress', function () {
+            ResetThisSession();
+        });
+    });
+    var timeInSecondsAfterSessionOut = 300;
+    var secondTick = 0;
+    function ResetThisSession() {
+        secondTick = 0;
+    }
+    function StartThisSessionTimer() {
+        secondTick++;
+        var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
+        timeLeft = timeInSecondsAfterSessionOut - secondTick; // override, we have 30 secs only
+
+        $("#spanTimeLeft").html(timeLeft);
+
+        if (secondTick > timeInSecondsAfterSessionOut) {
+            clearTimeout(tick);
+            disconnect();
+            return;
+        }
+        tick = setTimeout("StartThisSessionTimer()", 1000);
+    }
+
+    StartThisSessionTimer();
+    function disconnect() {
+        $.ajax({
+            type: 'POST',
+            url: window.location.origin + '/disconnect',
+            async: false,
+            success: function (result) {
+                console.log('revoke response: ' + result);
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        }).done(function () {
+            window.location = window.location.origin + '/signin.ashx';
+        });
+    }
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: window.location.origin + '/getUserGoal',
+            contentType: 'application/octet-stream; charset=utf-8',
+            success: function (data) {
+                $("#getUserGoal").html("Personal Goal : " + data)
+            }
+        });
+        createManualUserChart();
+        createManualFinalLeaderboard();
+        createManualCurrentLeaderboard();
+    });
+    function createManualUserChart() {
+        $.ajax({
+            url: window.location.origin + '/getManualUserChart',
+            success: function (res) {
+                console.log(res)
+                var chart = new CanvasJS.Chart("chartContainer",
+                    {
+                        title: {
+                            text: "Last 7 days"
+                        },
+                        data: [
+                       {
+                           type: "column",
+                           dataPoints: JSON.parse(res)
+
+                       }
+                        ]
+                    });
+
+                chart.render();
+            },
+            contentType: "application/json"
+        });
+    }
+    function createManualFinalLeaderboard() {
+        $("#finalstats").jsGrid({
+            width: "100%",
+            height: "400px",
+            paging: true,
+            controller: {
+                loadData: function () {
+                    console.log('abc');
+                    var data = $.Deferred();
+                    $.ajax({
+                        type: "GET",
+                        url: window.location.origin + '/getManualFinalLeaderboard'
+
+                    }).done(function (response) {
+                        data.resolve(jQuery.parseJSON(response));
+                    });
+                    return data.promise();
+
+                }
+            },
+            fields: [
+                { name: "position", type: "number", title: "POSITION", width: 50, align: "center" },
+                { name: "username", type: "text", title: "NICKNAME", width: 80, align: "center" },
+                { name: "max_steps", type: "number", title: "STEP COUNT", width: 50, align: "center" },
+                { name: "last_updated_date", type: "text", title: "UPDATED ON", width: 80, align: "center" },
+            ]
+        });
+        $("#finalstats").jsGrid("loadData");
+    }
+    function createManualCurrentLeaderboard() {
+        $("#currstats").jsGrid({
+            width: "100%",
+            height: "400px",
+            paging: true,
+            controller: {
+                loadData: function () {
+                    console.log('abc');
+                    var data = $.Deferred();
+                    $.ajax({
+                        type: "GET",
+                        url: window.location.origin + '/getManualCurrLeaderboard'
+
+                    }).done(function (response) {
+                        data.resolve(jQuery.parseJSON(response));
+                    });
+                    return data.promise();
+
+                }
+            },
+            fields: [
+                { name: "position", type: "number", title: "POSITION", width: 50, align: "center" },
+                { name: "username", type: "text", title: "NICKNAME", width: 80, align: "center" },
+                { name: "max_steps", type: "number", title: "STEP COUNT", width: 50, align: "center" },
+                { name: "last_updated_date", type: "text", title: "UPDATED ON", width: 80, align: "center" },
+            ]
+        });
+
+        $("#currstats").jsGrid("loadData");
+    }
+
+</script>
+</html>

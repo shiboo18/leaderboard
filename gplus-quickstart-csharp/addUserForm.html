@@ -1,0 +1,174 @@
+﻿<html>
+<head>
+    <title>Fitness Leaderboard</title>
+    <meta name="description" content="Leaderboard for fitness" />
+    <meta name="keywords" content="website keywords, website keywords" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <!-- stylesheets -->
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link href="css/colour.css" rel="stylesheet" type="text/css" />
+    <!-- modernizr enables HTML5 elements and feature detects -->
+    <script type="text/javascript" src="js/modernizr-1.5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
+</head>
+<body>
+    <div id="main">
+        <!-- begin header -->
+        <header>
+            <div id="logo"><h1>FITNESS<a href="#">LEADER</a>BOARD</h1></div>
+            <ul class="sf-menu" id="nav">                
+                <li><a href="addUserHandler.ashx">Add User</a></li>
+                <li><a href="#" onclick="disconnect()">Logout</a></li>
+            </ul>
+        </header>
+        <!-- end header -->
+        <!-- begin content -->
+        <div id="site_content">
+            <div id="left_content">
+                <h1>Add User </h1>
+                <p> Please add the user</p>
+                <p id="submitstatus" style="color:red"></p>
+                <form name="dataForm" id="dataForm">
+                    <fieldset style="padding:5px">                        
+                        <label> Enter nickname:</label>
+                        <input type="text" name="nickname" id="nickname"><br><br>
+                        <label> Enter email id:</label>
+                        <input type="text" name="emailid" id="emailid"><br><br>
+                        <label> Enter goal:</label>
+                        <input type="text" name="goal" id="goal"><br><br>
+                        <label> Account Status:</label>
+                        <select name="day">
+                            <option value="ACTIVE">Active</option>
+                            <option value="INACTIVE">InActive</option>
+                            <option value="ADMIN">Admin</option>
+                        </select>
+                        <br /><br />
+                        <input type="button" value="Submit" id="submitGoalBtn">
+                    </fieldset>
+                </form>
+                
+                
+                
+            </div>
+            <div id="right_content">
+                <h1>Update User Status </h1>
+                <p> Please update the user account status</p>
+                <p id="submitstatus2" style="color:red"></p>
+                <form name="dataForm2" id="dataForm2">
+                    <fieldset style="padding:5px">
+                        <label> Enter nickname:</label>
+                        <input type="text" name="nickname" id="nickname"><br><br>                        
+                        <label> Account Status:</label>
+                        <select name="day">
+                            <option value="ACTIVE">Active</option>
+                            <option value="INACTIVE">InActive</option>
+                        </select>
+                        <br /><br />
+                        <input type="button" value="Submit" id="submitGoalBtn2">
+                    </fieldset>
+                </form>
+                <br /><br />
+            </div>
+        </div>
+
+        <!-- begin footer -->
+        <footer>
+            <p>Copyright &copy; 2012 PhotoArtWork2. All Rights Reserved. <a href="http://www.css3templates.co.uk">Design from css3templates.co.uk</a>.</p>
+        </footer>
+    </div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("body").on('click keypress', function () {
+            ResetThisSession();
+        });
+    });
+    var timeInSecondsAfterSessionOut = 300;
+    var secondTick = 0;
+    function ResetThisSession() {
+        secondTick = 0;
+    }
+    function StartThisSessionTimer() {
+        secondTick++;
+        var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
+        timeLeft = timeInSecondsAfterSessionOut - secondTick; // override, we have 30 secs only
+
+        $("#spanTimeLeft").html(timeLeft);
+
+        if (secondTick > timeInSecondsAfterSessionOut) {
+            clearTimeout(tick);
+            disconnect();
+            return;
+        }
+        tick = setTimeout("StartThisSessionTimer()", 1000);
+    }
+
+    StartThisSessionTimer();
+    $(document).ready(function () {
+        $("#submitstatus").hide();
+        
+        $("#submitGoalBtn").click(function () {
+            var formData = $("#dataForm").serialize();
+            $.ajax({
+                type: "POST",
+                url: window.location.origin + '/addUser?' + formData,
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function (error) {
+                    console.log("success");
+                    $("#submitstatus").text("Form submitted successfully");
+                    $("#submitstatus").show();                    
+                    document.getElementById("dataForm").reset();
+                },
+                error: function (e) {
+                    console.log(e); //use this to see an error in ajax request
+                    $("#submitstatus").text("Form not submitted");
+                    $("#submitstatus").show();
+                    document.getElementById("dataForm").reset();
+                }
+            });
+        });
+        $("#submitstatus2").hide();
+
+        $("#submitGoalBtn2").click(function () {
+            var formData2 = $("#dataForm2").serialize();
+            $.ajax({
+                type: "POST",
+                url: window.location.origin + '/updateUserAccountStatus?' + formData2,
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function (error) {
+                    console.log("success");
+                    $("#submitstatus2").text("Form submitted successfully");
+                    $("#submitstatus2").show();
+                    document.getElementById("dataForm2").reset();
+                },
+                error: function (e) {
+                    console.log(e); //use this to see an error in ajax request
+                    $("#submitstatus2").text("Form not submitted");
+                    $("#submitstatus2").show();
+                    document.getElementById("dataForm2").reset();
+                }
+            });
+        });
+    });
+    function disconnect() {
+        $.ajax({
+            type: 'POST',
+            url: window.location.origin + '/disconnect',
+            async: false,
+            success: function (result) {
+                console.log('revoke response: ' + result);
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        }).done(function () {
+            window.location = window.location.origin + '/signin.ashx';
+        });
+    }   
+</script>
+</html>

@@ -1,0 +1,165 @@
+﻿<html>
+<head>
+    <title>Fitness Leaderboard</title>
+    <meta name="description" content="Leaderboard for fitness" />
+    <meta name="keywords" content="website keywords, website keywords" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <!-- stylesheets -->
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link href="css/colour.css" rel="stylesheet" type="text/css" />
+    <!-- modernizr enables HTML5 elements and feature detects -->
+    <script type="text/javascript" src="js/modernizr-1.5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
+</head>
+<body>
+    <div id="main">
+        <!-- begin header -->
+        <header>
+            <div id="logo"><h1>FITNESS<a href="#">LEADER</a>BOARD</h1></div>
+            <ul class="sf-menu" id="nav">
+                <li><a href="userInputFormHandler.ashx">Home</a></li>                
+                <li><a href="fitnessDataCollectionHandler.ashx">Get Fitness Data </a></li>                
+                <li><a href="#" onclick="disconnect()">Logout</a></li>
+            </ul>
+        </header>
+        <!-- end header -->
+        <!-- begin content -->
+        <div id="site_content">
+            <div id="left_content">
+                <h1>Update Step Count </h1>
+                <p> Please update the step count for today or yesterday. Please select the day and enter the step counts. Once you have filled the fields, click Submit. </p>
+                <p id="submitstatus" style="color:red"></p>
+                <form name="dataForm" id="dataForm">
+                    <fieldset style="padding:5px">
+                        <label> Select the day:</label>
+                        <select name="day">                            
+                            <option value="Yesterday">Yesterday</option>
+                        </select>
+                        <br /><br />
+                        <label> Enter the steps:</label>
+                        <input type="number" name="stepCount" id="stepCount"><br><br>
+                        <input type="button" value="Submit" id="submitGoalBtn">
+                    </fieldset>
+                </form>
+                <br /><br />
+                <p>
+                    The table below shows the step count for today and yesterday.<br />
+                    After clicking submit , please refresh the page to view the latest step count.
+                </p>
+                <div id="userData"></div>
+            </div>
+            <div id="right_content">
+                <img style="float: left;" src="images/about.jpg" title="about me" alt="about me" />
+            </div>
+        </div>
+
+        <!-- begin footer -->
+        <footer>
+            <p>Copyright &copy; 2012 PhotoArtWork2. All Rights Reserved. <a href="http://www.css3templates.co.uk">Design from css3templates.co.uk</a>.</p>
+        </footer>
+    </div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("body").on('click keypress', function () {
+            ResetThisSession();
+        });
+    });
+    var timeInSecondsAfterSessionOut = 300;
+    var secondTick = 0;
+    function ResetThisSession() {
+        secondTick = 0;
+    }
+    function StartThisSessionTimer() {
+        secondTick++;
+        var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
+        timeLeft = timeInSecondsAfterSessionOut - secondTick; // override, we have 30 secs only
+
+        $("#spanTimeLeft").html(timeLeft);
+
+        if (secondTick > timeInSecondsAfterSessionOut) {
+            clearTimeout(tick);
+            disconnect();
+            return;
+        }
+        tick = setTimeout("StartThisSessionTimer()", 1000);
+    }
+
+    StartThisSessionTimer();
+    $(document).ready(function () {
+        $("#submitstatus").hide();
+        createUserDataGrid();
+        $("#submitGoalBtn").click(function () {
+            var formData = $("#dataForm").serialize();
+            $.ajax({
+                type: "POST",
+                url: window.location.origin + '/updateUserSteps?' + formData,
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function (error) {
+                    console.log("success");
+                    $("#submitstatus").text("Form submitted successfully");
+                    $("#submitstatus").show();
+                    $("#userData").jsGrid("loadData");
+                    document.getElementById("dataForm").reset();
+                },
+                data: { "day": $("#day").val(), "stepCount": $("#stepCount").val() },
+                error: function (e) {
+                    console.log(e); //use this to see an error in ajax request
+                    $("#submitstatus").text("Form not submitted");
+                    $("#submitstatus").show();
+                    document.getElementById("dataForm").reset();
+                }
+            });
+        });
+    });
+    function disconnect() {
+        $.ajax({
+            type: 'POST',
+            url: window.location.origin + '/disconnect',
+            async: false,
+            success: function (result) {
+                console.log('revoke response: ' + result);
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        }).done(function () {
+            window.location = window.location.origin + '/signin.ashx';
+        });
+    }
+    function createUserDataGrid() {
+        $("#userData").jsGrid({
+            width: "100%",
+            height: "200px",
+            paging: true,
+            controller: {
+                loadData: function () {
+                    console.log('abc');
+                    var data = $.Deferred();
+                    $.ajax({
+                        type: "GET",
+                        url: window.location.origin + '/getUserData'
+
+                    }).done(function (response) {
+                        data.resolve(jQuery.parseJSON(response));
+                    });
+                    return data.promise();
+
+                }
+            },
+            fields: [
+                { name: "fitness_date", type: "text", title: "DATE", width: 80, align: "center" },
+                { name: "max_steps", type: "number", title: "STEP COUNT", width: 50, align: "center" },
+                { name: "last_updated_date", type: "text", title: "UPDATED ON", width: 80, align: "center" },
+            ]
+        });
+        $("#userData").jsGrid("loadData");
+    }
+
+</script>
+</html>

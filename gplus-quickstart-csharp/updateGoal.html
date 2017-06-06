@@ -1,0 +1,123 @@
+﻿<html>
+<head>
+    <title>Fitness Leaderboard</title>
+    <meta name="description" content="Leaderboard for fitness" />
+    <meta name="keywords" content="website keywords, website keywords" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <!-- stylesheets -->
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link href="css/colour.css" rel="stylesheet" type="text/css" />
+    <!-- modernizr enables HTML5 elements and feature detects -->
+    <script type="text/javascript" src="js/modernizr-1.5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
+</head>
+<body>
+    <div id="main">
+        <!-- begin header -->
+        <header>
+            <div id="logo"><h1>FITNESS<a href="#">LEADER</a>BOARD</h1></div>
+            <ul class="sf-menu" id="nav">
+                <li><a href="userInputFormHandler.ashx">Home</a></li>
+                <li><a href="gfitLeaderboardHandler.ashx">Google Leaderboard </a></li>
+                <li><a href="manualLeaderboardHandler.ashx">Manual Leaderboard </a></li>
+                <li><a href="fitnessDataCollectionHandler.ashx">Get Fitness Data </a></li>
+                <li><a href="updateGoalHandler.ashx">Goal</a></li>
+                <li><a href="#" onclick="disconnect()">Logout</a></li>
+            </ul>
+        </header>
+        <!-- end header -->
+        <!-- begin content -->
+        <div id="site_content">
+            <div id="left_content">
+                <h1>Profile </h1>
+                <p> Please update your goal - number of steps per day.</p>
+                <p id="submitstatus" style="color:red;"></p>
+                <form name="dataForm" id="dataForm">
+                    Please enter your goal:<br>
+                    <input type="number" name="stepCount" id="stepCount"><br><br>
+                    <input type="button" name="submit" id="submitGoalBtn" value="Submit">
+                </form>
+            </div>
+            <div id="right_content">
+                <img style="float: left;" src="images/about.jpg" title="about me" alt="about me" />
+            </div>
+        </div>
+
+        <!-- begin footer -->
+        <footer>
+            <p>Copyright &copy; 2012 PhotoArtWork2. All Rights Reserved. <a href="http://www.css3templates.co.uk">Design from css3templates.co.uk</a>.</p>
+        </footer>
+    </div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("body").on('click keypress', function () {
+            ResetThisSession();
+        });
+    });
+    var timeInSecondsAfterSessionOut = 300;
+    var secondTick = 0;
+    function ResetThisSession() {
+        secondTick = 0;
+    }
+    function StartThisSessionTimer() {
+        secondTick++;
+        var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
+        timeLeft = timeInSecondsAfterSessionOut - secondTick; // override, we have 30 secs only 
+
+        $("#spanTimeLeft").html(timeLeft);
+
+        if (secondTick > timeInSecondsAfterSessionOut) {
+            clearTimeout(tick);
+            disconnect();
+            return;
+        }
+        tick = setTimeout("StartThisSessionTimer()", 1000);
+    }
+
+    StartThisSessionTimer();
+    $(document).ready(function () {
+        $("#submitstatus").hide();
+        $("#submitGoalBtn").click(function () {
+            var formData = $("#dataForm").serialize();
+            $.ajax({
+                type: "POST",
+                url: window.location.origin + '/updateGoal',
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function (error) {
+                    console.log("success")
+                    $("#submitstatus").text("Form submitted successfully");
+                    $("#submitstatus").show();
+                    document.getElementById("dataForm").reset();
+                },
+                data: {"stepCount":$("#stepCount").val()},
+                error: function (e) {
+                    console.log(e); //use this to see an error in ajax request
+                }
+            });
+            
+        });
+    });
+    function disconnect() {
+        $.ajax({
+            type: 'POST',
+            url: window.location.origin + '/disconnect',
+            async: false,
+            success: function (result) {
+                console.log('revoke response: ' + result);
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        }).done(function () {
+            window.location = window.location.origin + '/signin.ashx';
+        });
+    }
+
+</script>
+</html>
